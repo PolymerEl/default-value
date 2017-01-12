@@ -2,7 +2,7 @@
   "name": "default-value",
   "description": "a web component for handling default values with with firebase-document and firebase-query",
   "main": "default-value-import.html",
-  "version": "0.3.0",
+  "version": "0.3.3",
   "authors": [
     "christophe geiser"
   ],
