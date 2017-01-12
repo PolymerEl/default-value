@@ -4,6 +4,8 @@
 
 `<default-value>` is a a web-component for handling default values with firebase
 
+`data` property is equal to `input` property (usually bound to `data` property of `<firebase-document>`) when different from `null` or `{}`. Otherwise, it returns `default-value`.
+A `default-type` allows to properly serialize default-value.
 
 Example Usage:
 
@@ -19,9 +21,24 @@ Example Usage:
 ```
 -->
 ```html
+<firebase-document 
+   path="/settings/termsVersion" 
+  data="{{fbTermsVersion}}"></firebase-document>
+<!-- termsVersion will be equal to "" when fbTermsVersion is null or {}. Otherwise it is "v0" (primitive, data stored at "settings/termsVersion")-->
+<default-value 
+  data="{{termsVersion}}"
+   input="{{fbTermsVersion}}" 
+   default-value=""></default-value>
 
-<default-value input="{{data}}" data="{{dataToUse}}"></default-value>
-<firebase-document path="/yourPath" data="{{data}}"></firebase-document>
+<firebase-document 
+  path="/userData/terms/[[user.uid]]/[[termsVersion]]"  
+  data="{{userTerms}}"></firebase-document>
+<!-- userTimersSigned is false whenever userTerms id null or {}. Note "object" default-type so that "false" is parsed to false -->
+<default-value 
+  data="{{userTermsSigned}}" 
+  input="{{userTerms}}" 
+  default-type="object" 
+  default-value="false"></default-value>
 
 ```
 
