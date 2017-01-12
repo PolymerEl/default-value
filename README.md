@@ -5,8 +5,6 @@
 `<default-value>` is a a web-component for handling default values with firebase
 
 
-
-```
 Example Usage:
 
 <!--
@@ -23,7 +21,7 @@ Example Usage:
 ```html
 
 <default-value input="{{data}}" data="{{dataToUse}}"></default-value>
-<firebase-document path="" data="{{data}}"></firebase-document>
+<firebase-document path="/yourPath" data="{{data}}"></firebase-document>
 
 ```
 
