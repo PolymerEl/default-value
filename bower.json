@@ -1,0 +1,30 @@
+{
+  "name": "default-value",
+  "description": "a web component for handling default values with with firebase-document and firebase-query",
+  "main": "default-value-import.html",
+  "version": "0.3.0",
+  "authors": [
+    "christophe geiser"
+  ],
+  "license": "https://github.com/PolymerEl/default-value/LICENSE",
+  "repository": {
+    "url": "https://github.com/PolymerEl/default-value"
+  },
+  "keywords": [
+    "web-components",
+    "polymer",
+    "firebase",
+    "polymerfire",
+    "database"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0",
+    "polymerfire": "firebase/polymerfire#^0.10.3",
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  }
+}

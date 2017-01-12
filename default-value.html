@@ -1,0 +1,147 @@
+<link rel="import" href="../polymer/polymer.html">
+<!--
+util element to enable setting default value when firebase return {} or []
+-->
+<dom-module id="default-value">
+  <template>
+  </template>
+  <script>
+  Polymer({
+    is: 'default-value',
+
+    properties: {
+      /**
+       * `input` the input value (taht is bound to firebase-document data)
+       * We do not specify a type because we don't know it
+       */
+      input: {
+         notify: true
+      },
+
+      /**
+       * `defaultValue` the value to use if firebase does not 
+       */
+      defaultValue: {
+
+      },
+
+      /**
+       * `defaultType` the type for `defaultValue`
+       */
+      defaultType: {
+        type: String,
+        value: 'string'
+      },
+
+      /**
+       * `data` the property to bind to. Is is equal to defaultValue when `input` is empty. To `input otherwise`
+       */
+      data: {
+        notify: true
+      },
+
+      /**
+       * `useDefault` a flag that is true when we are using defaultValue
+       */
+      useDefault: {
+        type: Boolean,
+        readOnly: true,
+        notify: true
+      }
+
+    },
+
+    observers: [
+      '_observeInput(input, defaultValue, defaultType)',
+      '_observeData(data)',
+      '_observeDataMutation(input.*)'
+    ],
+
+    _observeInput: function(input, defaultValue, defaultType) {
+      if (defaultValue !== undefined && defaultType && this.valueIsEmpty(input)) {
+        defaultValue = typeof defaultValue === 'string' ? this._deserializeDefault(defaultValue, defaultType) : defaultValue;
+        this._setUseDefault(true);
+        this.unlinkPaths('input', 'data');
+        this.data = defaultValue;
+      } else {
+        this._setUseDefault(false);
+        this.linkPaths('input', 'data');
+        this.data = input;
+      }
+
+    },
+
+    _observeData: function(data) {
+      if(!this.userDefault) {
+        this.input = data;
+      }
+    },
+
+    _observeDataMutation: function(changedData) {
+      if(!this.userDefault && changedData.path !== 'data') {
+        this.set(['input'].concat(changedData.path.split('.').splice(1)), changedData.value);
+      }
+    },
+
+    /**
+     * A convenience method. Returns true iff value is null, undefined,
+     * an empty array, or an object with no keys.
+     */
+    valueIsEmpty: function(value) {
+      if (Array.isArray(value)) {
+        return value.length === 0;
+      } else if (Object.prototype.isPrototypeOf(value)) {
+        return Object.keys(value).length === 0;
+      } else {
+        return value === null;
+      }
+    },
+
+
+    _deserializeDefault: function(value, type) {
+      type = type.toLowerCase();
+      switch (type) {
+        case 'number':
+          value = Number(value);
+          break;
+
+        case 'boolean':
+          value = (value !== null);
+          break;
+
+          // we want to be able to set an `undefined` defaultValue
+        case 'undefined':
+          value = (value === null || value === '') ? undefined : value;
+          break;
+
+        case 'object':
+          try {
+            value = JSON.parse(value);
+          } catch (x) {
+            // allow non-JSON literals like Strings and Numbers
+          }
+          break;
+
+        case 'array':
+          try {
+            value = JSON.parse(value);
+          } catch (x) {
+            value = null;
+            console.warn('Polymer::Attributes: couldn`t decode Array as JSON');
+          }
+          break;
+
+        case 'date':
+          value = new Date(value);
+          break;
+
+        case 'string':
+        default:
+          break;
+      }
+      return value;
+    }
+
+  });
+  </script>
+</dom-module>
