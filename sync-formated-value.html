@@ -1,0 +1,66 @@
+<link rel="import" href="../polymer/polymer.html">
+<!--
+  util element to use when two values in two different format need to be in sync. 
+  One example is when we use <paper-input type="datetime-local>" and want to save the corresponding value 
+  in firebase as a unix timestamp (e.g. a number)
+-->
+<dom-module id="sync-formated-value">
+  <script>
+  Polymer({
+    is: 'sync-formated-value',
+
+    properties: {
+      /**
+       * `value` the input value 
+       * We do not specify a type because we don't know it
+       */
+      value: {
+         notify: true
+      },
+
+      /**
+       * `formatedValue` the value being foramted (e.g. format(value))
+       */
+      formatedValue: {
+         notify: true
+      },
+
+      /**
+       * `format` the formating function
+       */
+      format: {
+        type: Function
+      },
+
+
+      /**
+       * `formatInvert` the inverse formating function
+       */
+      formatInvert: {
+        type: Function
+      },
+
+    },
+
+    observers: [
+      'observeValue(value, format)',
+      'observeFormatedValue(formatedValue, formatInvert)'
+    ],
+
+    observeValue: function(value, format) {
+      this._isFormating = true;
+      this.formatedValue = format.apply(this,[value]);
+      this._isFormating = false;
+    },
+    
+    observeFormatedValue: function(formatedValue, formatInvert) {
+      if(!this._isFormating ) {
+        this.value = formatInvert.apply(this,[formatedValue]);
+      }
+    }
+
+   
+
+  });
+  </script>
+</dom-module>
